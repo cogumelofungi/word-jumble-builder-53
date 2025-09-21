@@ -163,7 +163,7 @@ export function AdvancedVideoPlayer({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent 
-        className="max-w-full w-screen h-screen p-0 m-0 bg-black border-0"
+        className="max-w-full w-screen h-screen p-0 m-0 bg-black border-0 [&>button]:text-white [&>button]:hover:bg-white/20 [&>button]:z-50"
         onPointerMove={showControlsTemporarily}
       >
         <VisuallyHidden>
@@ -229,14 +229,6 @@ export function AdvancedVideoPlayer({
               <h1 className="text-xl font-semibold text-white max-w-2xl truncate">
                 {title}
               </h1>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={onClose}
-                className="text-white hover:bg-white/20 rounded-full"
-              >
-                <X className="w-6 h-6" />
-              </Button>
             </div>
 
             {/* Center Play Button */}
