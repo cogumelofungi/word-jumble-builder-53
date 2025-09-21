@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { Slider } from '@/components/ui/slider';
 import { 
   X, Volume2, VolumeX, Play, Pause, SkipBack, SkipForward, 
@@ -128,6 +129,7 @@ export function AdvancedVideoPlayer({
 
   useEffect(() => {
     if (isOpen) {
+      console.log('AdvancedVideoPlayer opened with URL:', videoUrl);
       setIsPlaying(false);
       setCurrentTime(0);
       setDuration(0);
@@ -140,6 +142,10 @@ export function AdvancedVideoPlayer({
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="max-w-full w-screen h-screen p-0 m-0 bg-black border-0">
+          <VisuallyHidden>
+            <DialogTitle>Player de vídeo: {title}</DialogTitle>
+            <DialogDescription>Reproduzindo {title}</DialogDescription>
+          </VisuallyHidden>
           <div className="relative w-full h-full">
             <Button
               variant="ghost"
@@ -168,6 +174,10 @@ export function AdvancedVideoPlayer({
         className="max-w-full w-screen h-screen p-0 m-0 bg-black border-0"
         onPointerMove={showControlsTemporarily}
       >
+        <VisuallyHidden>
+          <DialogTitle>Player de vídeo: {title}</DialogTitle>
+          <DialogDescription>Reproduzindo {title}</DialogDescription>
+        </VisuallyHidden>
         <div className="relative w-full h-full">
           {isLoading && <VideoLoader title={title} />}
           
@@ -176,8 +186,18 @@ export function AdvancedVideoPlayer({
             src={videoUrl}
             className="w-full h-full object-contain"
             autoPlay
-            onLoadStart={() => setIsLoading(true)}
-            onCanPlay={() => setIsLoading(false)}
+            onLoadStart={() => {
+              console.log('Video load started for:', videoUrl);
+              setIsLoading(true);
+            }}
+            onCanPlay={() => {
+              console.log('Video can play:', videoUrl);
+              setIsLoading(false);
+            }}
+            onError={(e) => {
+              console.error('Video error:', e, 'URL:', videoUrl);
+              setIsLoading(false);
+            }}
             onTimeUpdate={(e) => {
               const video = e.target as HTMLVideoElement;
               setCurrentTime(video.currentTime);
