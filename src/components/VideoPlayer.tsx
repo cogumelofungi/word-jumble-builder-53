@@ -78,14 +78,14 @@ export function VideoPlayer({ isOpen, onClose, videoUrl, title, onProgress }: Vi
       if (googleDriveId) {
         console.log('Google Drive video detected:', googleDriveId);
         driveLoadStartRef.current = Date.now();
-        // Se depois de 8s ainda não deu sinal de carregamento satisfatório, mostra aviso (apenas para Google Drive)
+        // Aumenta o timeout para 15s e remove a heurística de carregamento rápido
         if (fallbackErrorTimerRef.current) {
           clearTimeout(fallbackErrorTimerRef.current as any);
         }
         fallbackErrorTimerRef.current = window.setTimeout(() => {
-          console.log('Google Drive timeout - showing error dialog');
-          setShowErrorDialog(true);
-        }, 8000);
+          console.log('Google Drive timeout - ainda carregando após 15s');
+          setIsLoading(false); // Remove loading mas não força erro
+        }, 15000);
       } else if (isArchive) {
         console.log('Archive.org video detected');
         // Para archive.org, apenas inicia o loading sem heurística de erro
@@ -108,7 +108,6 @@ export function VideoPlayer({ isOpen, onClose, videoUrl, title, onProgress }: Vi
   }, [isOpen, videoUrl, googleDriveId, isArchive]);
 
   const handleDriveIframeLoad = () => {
-    // Quanto mais rápido carregar, maior a chance de ser a tela de erro do Drive
     const start = driveLoadStartRef.current ?? Date.now();
     const elapsed = Date.now() - start;
 
@@ -120,12 +119,8 @@ export function VideoPlayer({ isOpen, onClose, videoUrl, title, onProgress }: Vi
       fallbackErrorTimerRef.current = null;
     }
 
-    // Aplica heurística de erro apenas para Google Drive, não para archive.org
-    if (elapsed < 1200 && googleDriveId && !isArchive) {
-      console.log('Fast load detected for Google Drive - showing error dialog');
-      // Heurística: carregou quase instantâneo => provavelmente tela de erro do Drive
-      setShowErrorDialog(true);
-    }
+    // Remove a heurística automática de erro - deixa o usuário decidir se há problema
+    console.log('Google Drive iframe loaded successfully');
   };
 
   const handleErrorDialogClose = () => {
