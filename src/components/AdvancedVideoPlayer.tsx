@@ -141,20 +141,12 @@ export function AdvancedVideoPlayer({
   if (youtubeId) {
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-full w-screen h-screen p-0 m-0 bg-black border-0">
+        <DialogContent className="max-w-full w-screen h-screen p-0 m-0 bg-black border-0 [&>button]:text-white [&>button]:hover:bg-white/20 [&>button]:z-50">
           <VisuallyHidden>
             <DialogTitle>Player de vídeo: {title}</DialogTitle>
             <DialogDescription>Reproduzindo {title}</DialogDescription>
           </VisuallyHidden>
           <div className="relative w-full h-full">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onClose}
-              className="absolute top-4 right-4 z-50 text-white hover:bg-white/20 rounded-full"
-            >
-              <X className="w-6 h-6" />
-            </Button>
             <iframe
               src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&rel=0&modestbranding=1&controls=1&showinfo=0&fs=1&iv_load_policy=3`}
               title={title}
