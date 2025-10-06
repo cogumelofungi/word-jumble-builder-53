@@ -252,7 +252,6 @@ const StudentsPanel = () => {
     stripe_customer_id: null,
     stripe_subscription_id: null
   })
-  .eq('user_id', userId);
       
       if (error) throw error;
 
